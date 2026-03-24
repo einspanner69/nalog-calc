@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Калькулятор налога при продаже недвижимости</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div class="card">
+    <h1>Рассчитайте налог к уплате после продажи недвижимости</h1>
+
+    <!-- Срок владения -->
+    <div class="section">
+        <div class="section-title">Срок владения, полных лет</div>
+        <div class="field">
+            <input type="number" id="years" placeholder="Введите количество лет" value="">
+        </div>
+        
+        <div class="checkbox-group">
+            <div class="checkbox-row">
+                <input type="checkbox" id="isSoleResidence">
+                <div class="tooltip-container">
+                    <label for="isSoleResidence">Единственное жилье</label>
+                    <span class="tooltip-icon">ⓘ</span>
+                    <span class="tooltip-text">
+                        Жилье считается единственным, если:<br><br>
+                        1. В собственности нет других жилых помещений, в том числе комнат, долей<br><br>
+                        2. Нет другой совместной собственности (например, купленной в браке, но оформленной не на вас)<br><br>
+                        3. Если квартира продана в течение 90 дней после покупки нового жилья
+                    </span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="section-title" style="margin-top: 16px;">Способ перехода в собственность</div>
+        <div class="radio-group" id="ownershipGroup">
+            <div class="radio-row">
+                <input type="radio" name="ownershipType" id="ownershipPurchase" value="purchase" checked>
+                <label for="ownershipPurchase">Покупка</label>
+            </div>
+            <div class="radio-row">
+                <input type="radio" name="ownershipType" id="ownershipPrivatization" value="privatization">
+                <label for="ownershipPrivatization">Приватизация</label>
+            </div>
+            <div class="radio-row">
+                <input type="radio" name="ownershipType" id="ownershipInheritance" value="inheritance">
+                <label for="ownershipInheritance">Наследование</label>
+            </div>
+            <div class="radio-row">
+                <input type="radio" name="ownershipType" id="ownershipGiftStranger" value="gift_stranger">
+                <label for="ownershipGiftStranger">Дарение от чужого человека</label>
+            </div>
+            <div class="radio-row">
+                <input type="radio" name="ownershipType" id="ownershipGiftRelative" value="gift_relative">
+                <label for="ownershipGiftRelative">Дарение от близкого родственника</label>
+            </div>
+            <div class="radio-row">
+                <input type="radio" name="ownershipType" id="ownershipLifeAnnuity" value="life_annuity">
+                <label for="ownershipLifeAnnuity">Пожизненная рента</label>
+            </div>
+        </div>
+    </div>
+
+    <!-- Покупка: цена и кадастр -->
+    <div class="section">
+        <div class="section-title">Данные по недвижимости</div>
+        <div class="field">
+            <label>Цена продажи, ₽</label>
+            <input type="text" id="sellPriceInput" placeholder="Укажите сумму" value="">
+        </div>
+        <div class="field">
+            <label>Кадастровая стоимость, ₽</label>
+            <input type="text" id="cadastralInput" placeholder="Укажите сумму" value="">
+        </div>
+    </div>
+
+    <!-- Налоговый вычет -->
+    <div class="section">
+        <div class="section-title">Налоговый вычет</div>
+        <div class="deduction-block">
+            <div class="deduction-option">
+                <div class="radio-row">
+                    <input type="radio" name="deductionType" id="deductFixed" value="fixed" checked>
+                    <label for="deductFixed">Фиксированный — 1 000 000 ₽</label>
+                </div>
+            </div>
+            <div class="deduction-option">
+                <div class="radio-row">
+                    <input type="radio" name="deductionType" id="deductExpenses" value="expenses">
+                    <label for="deductExpenses">Сумма расходов на приобретение</label>
+                </div>
+                <div id="expensesInputWrapper" style="display: none;" class="expenses-input">
+                    <input type="text" id="expensesAmountInput" placeholder="Введите сумму расходов" value="">
+                    <div class="expenses-hint">Расходы должны быть документально подтверждены</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Результаты -->
+    <div class="result-section">
+        <div class="result-line">
+            <div class="result-label">
+                <div class="tooltip-container-bottom">
+                    Налогооблагаемая база
+                    <span class="tooltip-icon">ⓘ</span>
+                    <span class="tooltip-text-bottom">
+                        Сумма дохода, с которой начисляется налог после применения вычета.<br>
+                        Рассчитывается как max(цена продажи, 70% от кадастровой стоимости) минус вычет.
+                    </span>
+                </div>
+            </div>
+            <span class="result-value" id="taxBaseDisplay">0 ₽</span>
+        </div>
+        <div class="result-line">
+            <span class="result-label">Налог 13%</span>
+            <span class="result-value" id="tax13Display">0 ₽</span>
+        </div>
+        <div class="result-line" id="tax15Row" style="display: none;">
+            <span class="result-label">Налог 15%</span>
+            <span class="result-value" id="tax15Display">0 ₽</span>
+        </div>
+        <div class="result-line">
+            <span class="result-label">Итого налог</span>
+            <span class="tax-value" id="taxDisplay">0 ₽</span>
+        </div>
+    </div>
+
+    <div class="button-group">
+        <button id="resetBtn">Вернуть налог</button>
+    </div>
+</div>
+
+<script src="js/calculator.js"></script>
+</body>
+</html>
